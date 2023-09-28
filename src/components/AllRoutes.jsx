@@ -8,9 +8,9 @@ import { PageNotFound } from "../pages/PageNotFound";
 export const AllRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Homepage />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/home" element={<Homepage />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
