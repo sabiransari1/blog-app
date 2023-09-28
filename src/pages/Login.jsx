@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import {
-  Box,
   Flex,
   Input,
   VStack,
   FormControl,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { loginUser } from "../redux/auth/action";
+import { Link } from "react-router-dom";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,6 +24,7 @@ export const Login = () => {
     }),
     shallowEqual
   );
+  const toast = useToast();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -36,11 +38,26 @@ export const Login = () => {
   };
 
   return (
-    <Box minW={"100wh"} minH={"100vh"}>
-      <Flex justify={"center"} align={"center"}>
-        <VStack spacing={"1rem"} w={"50%"}>
-          <form onSubmit={handleLogin}>
-            <FormControl>
+    <Flex minW={"100wh"} minH={"100vh"} justify={"center"} align={"center"}>
+      <Flex
+        justify={"center"}
+        align={"center"}
+        w={"50%"}
+        h={"50vh"}
+        border={"2px"}
+      >
+        <form onSubmit={handleLogin}>
+          <FormControl>
+            <VStack spacing={"1rem"}>
+              <Flex w={"100%"} gap={"1rem"}>
+                <Button w={"50%"} colorScheme={"blue"}>
+                  <Link to={"/"}>Login</Link>
+                </Button>
+                <Button w={"50%"}>
+                  <Link to={"/signup"}>Register</Link>
+                </Button>
+              </Flex>
+
               <Input
                 type={"email"}
                 placeholder={"Email"}
@@ -57,11 +74,13 @@ export const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
 
-              <Button type={"submit"}>Login</Button>
-            </FormControl>
-          </form>
-        </VStack>
+              <Button w={"100%"} type={"submit"}>
+                Login
+              </Button>
+            </VStack>
+          </FormControl>
+        </form>
       </Flex>
-    </Box>
+    </Flex>
   );
 };

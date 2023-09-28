@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -6,9 +6,11 @@ import {
   VStack,
   FormControl,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { registerUser } from "../redux/auth/action";
+import { Link } from "react-router-dom";
 
 export const Signup = () => {
   const [username, setUsername] = useState("");
@@ -25,6 +27,29 @@ export const Signup = () => {
     }),
     shallowEqual
   );
+  const toast = useToast();
+
+  useEffect(() => {
+    {
+      isLoading
+        ? toast({
+            title: `Loading...`,
+            status: "loading",
+            isClosable: true,
+            position: "top",
+            duration: 500,
+          })
+        : isError
+        ? toast({
+            title: `${errMessage}`,
+            status: "error",
+            isClosable: true,
+            position: "top",
+            duration: 1000,
+          })
+        : "";
+    }
+  }, [isLoading, isError]);
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -36,16 +61,38 @@ export const Signup = () => {
       password,
     };
 
-    console.log(registerUserData);
-    // dispatch(registerUser(registerUserData));
+    dispatch(registerUser(registerUserData)).then(() => {
+      toast({
+        title: `New User Registered Successfully`,
+        status: "success",
+        isClosable: true,
+        position: "top",
+        duration: 1000,
+      });
+    });
   };
 
   return (
-    <Box minW={"100wh"} minH={"100vh"}>
-      <Flex>
+    <Flex minW={"100wh"} minH={"100vh"} justify={"center"} align={"center"}>
+      <Flex
+        justify={"center"}
+        align={"center"}
+        w={"50%"}
+        h={"50vh"}
+        border={"2px"}
+      >
         <form onSubmit={handleRegister}>
-          <VStack spacing={"1rem"}>
-            <FormControl>
+          <FormControl>
+            <VStack spacing={"1rem"}>
+              <Flex w={"100%"} gap={"1rem"}>
+                <Button w={"50%"}>
+                  <Link to={"/"}>Login</Link>
+                </Button>
+                <Button w={"50%"} colorScheme={"blue"}>
+                  <Link to={"/signup"}>Register</Link>
+                </Button>
+              </Flex>
+
               <Input
                 type={"text"}
                 placeholder={"Username"}
@@ -78,11 +125,13 @@ export const Signup = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
 
-              <Button type={"submit"}>Register</Button>
-            </FormControl>
-          </VStack>
+              <Button w={"100%"} type={"submit"}>
+                Register
+              </Button>
+            </VStack>
+          </FormControl>
         </form>
       </Flex>
-    </Box>
+    </Flex>
   );
 };
